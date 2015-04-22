@@ -6,10 +6,44 @@ var validator = require('validator');
 
 var client = redis.createClient();
 
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/npm-mailer');
+
+var userSchema = mongoose.Schema({
+  email: String,
+  name: String,
+  frequency: String,
+  time: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+var User = mongoose.model('User', userSchema);
 
 function validate(obj) {
   
 }
+
+exports.registration = function(req, res, next) {
+  var user = new User({
+    email: req.body.email,
+    name: req.body.first_name + ' ' + req.body.last_name,
+    frequency: req.body.frequency
+  });
+
+  user.save(function(err, result) {
+    if (err) {
+      var error = new Error(err, err.stack);
+      res.status(507).send(error);
+      throw error;
+    } else {
+      res.status(200).send('success');
+    }
+  });
+};
+
 
 function createHsetArgs(obj, id) {
   var output = [['hmset', id]];
@@ -25,7 +59,7 @@ function createHsetArgs(obj, id) {
   return output;
 }
 
-exports.registration = function(req, res, next) {
+exports.redisRegistration = function(req, res, next) {
   var email = req.body.email; 
   var user = _.extend(req.body, {time: new Date().getTime()});
 
