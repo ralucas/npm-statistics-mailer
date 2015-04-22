@@ -19,7 +19,7 @@ var validate = function(element) {
 
 var createInput = function(name) {
   var label = name[0].toUpperCase() + name.slice(1);
-  return '<div class="input-field col s6 parameter_entry"><input id=' + name + ' name=' + name + ' type="text" class="validate">' +
+  return '<div class="input-field col s6 parameter_entry"><input id=' + name + ' name=parameter:' + name + ' type="text" class="validate">' +
     '<label for=' + name + '>' + label + '</label></div>';
 };
 
@@ -53,7 +53,7 @@ $(function() {
 
   $('button[name="action"]').click(function(e) {
     e.preventDefault();
-    var formData = $(this).serialize();
+    var formData = $(this).closest('form').serialize();
     $.post('/register', formData, function(data) {
       console.log(data); 
     });

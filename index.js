@@ -21,23 +21,38 @@ function validate(obj) {
   
 }
 
-app.post('/register', function(req, res) {
-  console.log(req.body);
-  var email = req.body.email; 
+function createHsetArgs(obj, id) {
+  var output = [['hmset', id]];
 
-  var command = _.map()
+  _.forEach(obj, function(val, key) {
+    if (!/parameter/.test(key)) {
+      output[0].push(key, val);
+    } else if (key !== 'parameter') {
+      var params = key.split(':');
+      output.push(['hmset', id + ':' + params[0], params[1], val]);
+    }
+  });
+  return output;
+}
+
+app.post('/register', function(req, res) {
+  var email = req.body.email; 
+  var user = _.extend(req.body, {time: new Date().getTime()});
 
   md5.update(email, 'utf8');
   var id = md5.digest('hex');
+
+  var commandArgs = createHsetArgs(user, id); 
 
   client.exists(id, function(err, exists) {
     if (exists) {
       res.status(401).send('exists');
     } else {
-      client.hset(id, function(err, result) {
-        if (err) throw new Error(err);
-        res.status(200).send('success');
-      });
+      client.multi(commandArgs)
+        .exec(function(err, result) {
+          if (err) throw new Error(err);
+          res.status(200).send('success');
+        });
     }
   });
 
