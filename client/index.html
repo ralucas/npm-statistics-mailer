@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="bower_components/materialize/dist/css/materialize.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="bower_components/modernizr/modernizr.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <div id="separator"></div>
+        <h1 class="center thin">Get npm Statistics Emailed to You!</h1>
+        <div id="separator"></div>
+        <div class="container">
+          <div class="row">
+            <form class="col s12">
+              <div class="row">
+                <div class="input-field col s6">
+                  <input name="first_name" id="first_name" type="text" class="validate">
+                  <label for="first_name">First Name</label>
+                </div>
+                <div class="input-field col s6">
+                  <input name="last_name" id="last_name" type="text" class="validate">
+                  <label for="last_name">Last Name</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input name="email" id="email" type="email" class="validate">
+                  <label for="email">Email</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <select name="frequency">
+                    <option value="daily" selected>Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                  <label>Select Frequency</label>
+                </div>
+              </div>
+              <div class="row">
+                <button class="btn waves-effect waves-light blue lighten-1" type="button" name="show_parameters">Select Parameters
+                  <i class="mdi-navigation-expand-more"></i>
+                </button>
+              </div>
+              <div class="row hide" id="parameters">
+                <div class="input-field col s6">
+                  <select name="parameter">
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="name">Name</option>
+                    <option value="description">Description</option>
+                    <option value="maintainer">Maintainer</option>
+                    <option value="url">URL</option>
+                    <option value="keyword">Keyword</option>
+                  </select>
+                  <label>Select Parameter</label>
+                </div>
+              </div>
+              <div class="row">
+                <button class="btn waves-effect waves-light blue lighten-1 right disabled" type="submit" name="action">Submit
+                  <i class="mdi-content-send right"></i>
+                </button>
+              </div>
+            </form>
+          </div> 
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="bower_components/jquery/dist/jquery.min.js"><\/script>')</script>
+        <script src="bower_components/materialize/dist/js/materialize.min.js"></script>
+        <script src="bower_components/lodash/lodash.min.js"></script>
+        <script src="bower_components/validator-js/validator.min.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+    </body>
+</html>
