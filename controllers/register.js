@@ -1,36 +1,43 @@
-var md5 = require('crypto').createHash('md5');
-
-var redis = require('redis');
 var _ = require('lodash');
 var validator = require('validator');
-
-var client = redis.createClient();
-
-var mongoose = require('mongoose');
-
-mongoose.connect('mongodb://localhost/npm-mailer');
-
-var userSchema = mongoose.Schema({
-  email: String,
-  name: String,
-  frequency: String,
-  time: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-var User = mongoose.model('User', userSchema);
+var User = require('../services/user');
+var mail = require('./mail');
 
 function validate(obj) {
   
+}
+
+function searchTerms(obj) {
+  var output = {
+    combined: []
+  };
+
+  _.forEach(obj, function(val, key) {
+    if (/search/.test(key)) {
+      var term = key.split('-').pop();
+      
+      output.combined.push(val);
+
+      if (output[term]) {
+        if (_.isString(output[term])) {
+          output[term] = [output[term], val];
+        } else {
+          output[term].push(val); 
+        }
+      } else {
+        output[term] = val;
+      }
+    }
+  });
+  return output;
 }
 
 exports.registration = function(req, res, next) {
   var user = new User({
     email: req.body.email,
     name: req.body.first_name + ' ' + req.body.last_name,
-    frequency: req.body.frequency
+    frequency: req.body.frequency,
+    searchTerms: searchTerms(req.body)
   });
 
   user.save(function(err, result) {
@@ -39,7 +46,9 @@ exports.registration = function(req, res, next) {
       res.status(507).send(error);
       throw error;
     } else {
-      res.status(200).send('success');
+      console.log(result);
+      mail.searchAndCache();
+      res.status(200).send({message: 'success', result: result});
     }
   });
 };

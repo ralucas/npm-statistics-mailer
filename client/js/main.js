@@ -19,7 +19,9 @@ var validate = function(element) {
 
 var createInput = function(name) {
   var label = name[0].toUpperCase() + name.slice(1);
-  return '<div class="input-field col s6 parameter_entry"><input id=' + name + ' name=parameter:' + name + ' type="text" class="validate">' +
+
+  return '<div class="input-field col s6 parameter_entry added"><input id=search-' +
+    name + ' name=search-' + name + ' type="text" class="validate">' +
     '<label for=' + name + '>' + label + '</label></div>';
 };
 
@@ -44,7 +46,7 @@ $(function() {
     var name = $(this).val();
     var input = createInput(name);
     var $entry = $(this).closest('#parameters');
-    var html = '<div class="input-field"><select name="parameter">' + $(this).html() + '</select></div>';
+    var html = '<div class="input-field added"><select name="parameter">' + $(this).html() + '</select></div>';
 
     $entry.append(input);
     $(this).closest('.input-field').append(html);
@@ -53,9 +55,15 @@ $(function() {
 
   $('button[name="action"]').click(function(e) {
     e.preventDefault();
-    var formData = $(this).closest('form').serialize();
+    var paramsSelect = $(this).closest('.container').find('#parameters');
+    var form = $(this).closest('form');
+    var formData = form.serialize();
     $.post('/register', formData, function(data) {
-      console.log(data); 
+      if (data.message === 'success') {
+        form[0].reset();
+        paramsSelect.addClass('hide');
+        $('.added').remove();
+      }
     });
   });
 });
