@@ -10,7 +10,8 @@ var userSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  searchTerms: Object
+  searchTerms: Object,
+  searchResults: Object
 });
 
 var User = mongoose.model('User', userSchema);

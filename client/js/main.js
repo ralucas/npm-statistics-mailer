@@ -53,6 +53,10 @@ $(function() {
     $('select').material_select();
   });
 
+  $('select[name="parameter"] option').select(function() {
+    $(this).prop('disabled', true);
+  });
+
   $('button[name="action"]').click(function(e) {
     e.preventDefault();
     var paramsSelect = $(this).closest('.container').find('#parameters');

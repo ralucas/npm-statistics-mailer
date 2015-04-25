@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var validator = require('validator');
-var User = require('../services/user');
+var User = require('../models/user');
 var mail = require('./mail');
 
 function validate(obj) {
