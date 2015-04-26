@@ -15,7 +15,11 @@ function searchTerms(obj) {
   _.forEach(obj, function(val, key) {
     if (/search/.test(key)) {
       var term = key.split('-').pop();
-      
+
+      if (/author/.test(term)) {
+        val = '=' + val;
+      }
+       
       output.combined.push(val);
 
       if (output[term]) {
@@ -25,7 +29,7 @@ function searchTerms(obj) {
           output[term].push(val); 
         }
       } else {
-        output[term] = val;
+       output[term] = val;
       }
     }
   });

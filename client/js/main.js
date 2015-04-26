@@ -36,7 +36,6 @@ $(function() {
     }
   });
   
-  
   $('button[name="show_parameters"]').click(function() {
     var paramsSelect = $(this).closest('.container').find('#parameters');
     paramsSelect.removeClass('hide');
@@ -50,11 +49,8 @@ $(function() {
 
     $entry.append(input);
     $(this).closest('.input-field').append(html);
+    //$(this).prop('disabled', true);
     $('select').material_select();
-  });
-
-  $('select[name="parameter"] option').select(function() {
-    $(this).prop('disabled', true);
   });
 
   $('button[name="action"]').click(function(e) {
@@ -70,4 +66,5 @@ $(function() {
       }
     });
   });
+
 });

@@ -1,21 +1,31 @@
 var npm = require('npm');
 var sendgrid = require('sendgrid')(process.env.SENDGRID_USER, process.env.SENDGRID_KEY);
-var md5 = require('crypto').createHash('md5');
 var Q = require('q');
 
-var redis = require('redis');
 var _ = require('lodash');
 var validator = require('validator');
 
 var db = require('../services/db');
-
-var client = redis.createClient();
 
 function searchNpm(terms) {
   return Q.ninvoke(npm, "load")
     .then(function() {
       return Q.nfcall(npm.commands.search, terms);
     });
+}
+
+function createEmailHtml(objs) {
+  var output = '<h1>Your npm Mailer</h1>';
+
+  _.forEach(objs, function(obj) {
+    output += '\n<h2>' + obj.name + '</h2>';
+    _.forEach(obj, function(val, key) {
+      output += '<p><strong>' + key + ':</strong>' +
+        '<span> ' + val + '</span></p>';
+    });
+  });
+
+  return output;
 }
 
 exports.searchAndCache = function() {
@@ -26,12 +36,14 @@ exports.searchAndCache = function() {
       if (!_.isArray(users)) users = [users];
       _.forEach(users, function(user) {
         searchNpm(user.searchTerms.combined)
-          .then(function() {
+          .then(function(pkgs) {
             db.store(user, pkgs)
               .then(function(data) {
-                send(user, data)
+                send(data, pkgs)
                   .then(function(response) {
                     console.log('response: ', response);
+                  }).fail(function(err) {
+                    console.error(err, err.stack);
                   });
               });
           });
@@ -43,13 +55,8 @@ exports.searchAndCache = function() {
 
 var send = function(user, pkgs) {
 
-  var html = _.map(pkgs, function(pkg) {
-    return _.forEach(pkg, function(val, key) {
-      return '<strong>' + key + '</strong>' +
-        '<span>' + val + '</span>';
-    });
-  });
-
+  var html = createEmailHtml(pkgs);
+  
   var params = {
     to:       [user.email],
     toname:   [user.name],
@@ -63,5 +70,4 @@ var send = function(user, pkgs) {
 
   return Q.ninvoke(sendgrid, 'send', email);
 };
-
 
